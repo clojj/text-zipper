@@ -21,6 +21,7 @@ Source-Repository head
 library
   exposed-modules:
     Data.Text.Zipper
+    Data.ByteString.Zipper
     Data.Text.Zipper.Generic
     Data.Text.Zipper.Generic.Words
 
@@ -29,6 +30,8 @@ library
 
   build-depends:       base < 5,
                        text,
+                       utf8-string,
+                       bytestring,
                        vector,
                        deepseq
   ghc-options:         -Wall
