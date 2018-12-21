@@ -449,4 +449,4 @@ clearZipper tz =
 -- |Construct a zipper
 byteStringZipper :: [BS.ByteString] -> Maybe Int -> ByteStringZipper BS.ByteString
 byteStringZipper =
-    mkZipper BS.singleton BS.drop BS.take BS.length BS.last BS.init B.null BS.lines BS.toString
+    mkZipper BS.fromChar BS.drop BS.take BS.length BS.last BS.init B.null BS.lines BS.toString
