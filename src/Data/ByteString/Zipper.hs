@@ -12,8 +12,6 @@
 -- Implementations using 'T.Text' and 'String' are provided.
 module Data.ByteString.Zipper
     ( ByteStringZipper
-    , unlines'
-
     -- *Construction and extraction
     , mkZipper
     , byteStringZipper
@@ -54,12 +52,11 @@ where
 
 import Control.Applicative ((<$>))
 import Control.DeepSeq
-import Data.Char (isPrint, chr, ord)
+import Data.Char (isPrint)
 import qualified Data.ByteString.UTF8 as BS
 import qualified Data.ByteString as B
 import qualified Data.Vector as V
 import qualified Data.Text.Zipper.Vector as V
-import Data.List (intersperse)
 
 data ByteStringZipper a =
     TZ { toLeft :: a
@@ -449,27 +446,7 @@ clearZipper tz =
        , below = []
        }
 
--- TODO helpers for Data.ByteString.UTF8
-
-singletonChar :: Char -> BS.ByteString
-singletonChar ch = BS.fromString [ch]
-
-lastChar :: BS.ByteString -> Char
-lastChar = chr . fromEnum . B.last
-
-unpackChars :: BS.ByteString -> String
-unpackChars = fmap (chr . fromEnum) . B.unpack
-
-unlines' [] = B.empty
-unlines' ss = B.concat (intersperse nl ss) `B.append` nl -- half as much space
-    where nl = singletonChar '\n'
-
-init' :: BS.ByteString -> BS.ByteString
-init' bs =
-    let l = BS.length bs
-    in BS.take (l - 1) bs
-
 -- |Construct a zipper
 byteStringZipper :: [BS.ByteString] -> Maybe Int -> ByteStringZipper BS.ByteString
 byteStringZipper =
-    mkZipper singletonChar BS.drop BS.take BS.length lastChar init' B.null BS.lines unpackChars
+    mkZipper BS.singleton BS.drop BS.take BS.length BS.last BS.init B.null BS.lines BS.toString
