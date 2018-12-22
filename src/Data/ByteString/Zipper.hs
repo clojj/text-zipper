@@ -41,6 +41,7 @@ module Data.ByteString.Zipper
     -- *Editing functions
     , insertChar
     , insertMany
+    , insertMany'
     , deletePrevChar
     , deleteChar
     , breakLine
@@ -213,11 +214,17 @@ insertChar_ ch tz
 
 -- |Insert many characters at the current cursor position. Move the
 -- cursor to the end of the inserted text.
-insertMany :: (Monoid a) => a -> ByteStringZipper a -> ByteStringZipper a
+insertMany :: (Monoid a) => a -> ByteStringZipper a -> ByteStringZipper a -- TODO replace this by insertMany' 
 insertMany str tz =
     let go [] z = z
         go (c:cs) z = maybe z (go cs) $ insertChar_ c z
     in go (toList_ tz str) tz
+
+insertMany' :: (Monoid a) => String -> ByteStringZipper a -> ByteStringZipper a
+insertMany' str tz =
+    let go [] z = z
+        go (c:cs) z = maybe z (go cs) $ insertChar_ c z
+    in go str tz
 
 -- |Insert a line break at the current cursor position.
 breakLine :: (Monoid a) => ByteStringZipper a -> ByteStringZipper a
