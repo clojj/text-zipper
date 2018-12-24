@@ -18,7 +18,7 @@ module Data.ByteString.Zipper
     , stringZipper
     , clearZipper
     , vectorZipper
-    , getText
+    , getByteString
     , currentLine
     , cursorPosition
     , lineLengths
@@ -143,9 +143,9 @@ mkZipper fromCh drp tk lngth lst int nl linesFunc toListF ls lmt =
                         else (head limitedLs, tail limitedLs)
     in TZ mempty first [] rest fromCh drp tk lngth lst int nl linesFunc toListF lmt
 
--- |Get the text contents of the zipper.
-getText :: (Monoid a) => ByteStringZipper a -> [a]
-getText tz = concat [ above tz
+-- |Get the ByteString contents of the zipper.
+getByteString :: (Monoid a) => ByteStringZipper a -> [a]
+getByteString tz = concat [ above tz
                     , [currentLine tz]
                     , below tz
                     ]
@@ -170,7 +170,7 @@ cursorPosition tz = (length $ above tz, length_ tz $ toLeft tz)
 -- described for 'cursorPosition'.
 moveCursor :: (Monoid a) => (Int, Int) -> ByteStringZipper a -> ByteStringZipper a
 moveCursor (row, col) tz =
-    let t = getText tz
+    let t = getByteString tz
     in if row < 0
            || row >= length t
            || col < 0
